@@ -1,0 +1,1128 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>StudyPlanner | University Study Workspace</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <!-- NAVIGATION BAR -->
+
+    <header id="website-header">
+
+        <nav class="website-nav">
+
+            <a href="#explore-section"
+               class="website-logo"
+               onclick="return showStage('explore')">
+                ✦ StudyPlanner
+            </a>
+
+            <div class="website-links">
+
+                <a href="#explore-section"
+                   id="stage-explore"
+                   class="stage-link active"
+                   onclick="return showStage('explore')"
+                   data-en="Explore"
+                   data-gr="Εξερεύνηση">
+                    Explore
+                </a>
+
+                <a href="#features-tour"
+                   id="stage-features"
+                   class="stage-link"
+                   onclick="return showStage('features')"
+                   data-en="Features"
+                   data-gr="Λειτουργίες">
+                    Features
+                </a>
+
+                <a href="#welcome-section"
+                   id="stage-signup"
+                   class="stage-link"
+                   onclick="return showStage('signup')"
+                   data-en="Sign Up"
+                   data-gr="Εγγραφή">
+                    Sign Up
+                </a>
+
+                <a href="#student-page"
+                   id="stage-workspace"
+                   class="stage-link"
+                   onclick="return showStage('workspace')"
+                   data-en="Workspace"
+                   data-gr="Χώρος Μελέτης">
+                    Workspace
+                </a>
+
+            </div>
+
+            <div id="language-box">
+
+                <select id="language"
+                        aria-label="Website language"
+                        onchange="changeLanguage()">
+
+                    <option value="en">English</option>
+                    <option value="gr">Ελληνικά</option>
+
+                </select>
+
+            </div>
+
+        </nav>
+
+        <div id="stage-progress">
+            <div id="stage-progress-fill"></div>
+        </div>
+
+    </header>
+
+
+    <!-- STAGE 1: EXPLORE -->
+
+    <section id="explore-section" class="journey-section">
+
+        <div class="explore-content">
+
+            <div class="explore-text">
+
+                <p class="eyebrow"
+                   data-en="YOUR UNIVERSITY WORKSPACE"
+                   data-gr="Ο ΠΑΝΕΠΙΣΤΗΜΙΑΚΟΣ ΣΟΥ ΧΩΡΟΣ">
+                    YOUR UNIVERSITY WORKSPACE
+                </p>
+
+                <h1 data-en="Plan. Study. Achieve."
+                    data-gr="Οργάνωσε. Μελέτησε. Πέτυχε.">
+                    Plan. Study. Achieve.
+                </h1>
+
+                <p class="explore-description"
+                   data-en="A smarter way to organize your semester, manage assignments and stay focused on what matters."
+                   data-gr="Ένας πιο έξυπνος τρόπος να οργανώνεις το εξάμηνό σου, τις εργασίες σου και τη μελέτη σου.">
+                    A smarter way to organize your semester,
+                    manage assignments and stay focused
+                    on what matters.
+                </p>
+
+                <div class="explore-buttons">
+
+                    <button class="primary-btn"
+                            onclick="showStage('signup')"
+                            data-en="Get Started →"
+                            data-gr="Ξεκίνα →">
+                        Get Started →
+                    </button>
+
+                    <button class="outline-btn"
+                            onclick="showStage('features')"
+                            data-en="Explore Features"
+                            data-gr="Δες τις Λειτουργίες">
+                        Explore Features
+                    </button>
+
+                </div>
+
+                <div class="explore-highlights">
+
+                    <span data-en="✓ Plan your studies"
+                          data-gr="✓ Οργάνωσε τη μελέτη σου">
+                        ✓ Plan your studies
+                    </span>
+
+                    <span data-en="✓ Track your tasks"
+                          data-gr="✓ Παρακολούθησε τις εργασίες σου">
+                        ✓ Track your tasks
+                    </span>
+
+                    <span data-en="✓ Stay focused"
+                          data-gr="✓ Μείνε συγκεντρωμένος">
+                        ✓ Stay focused
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="explore-image">
+
+                <img
+                    src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200"
+                    alt="Laptop and desk in a modern workspace">
+
+            </div>
+
+        </div>
+
+        <div class="explore-footer">
+
+            <span data-en="BUILT FOR UNIVERSITY STUDENTS"
+                  data-gr="ΓΙΑ ΦΟΙΤΗΤΕΣ ΠΑΝΕΠΙΣΤΗΜΙΟΥ">
+                BUILT FOR UNIVERSITY STUDENTS
+            </span>
+
+            <span>01 / 04</span>
+
+        </div>
+
+    </section>
+
+
+    <!-- STAGE 2: FEATURES -->
+
+    <section id="features-tour" class="journey-section">
+
+        <div class="features-heading">
+
+            <p class="eyebrow"
+               data-en="DISCOVER STUDYPLANNER"
+               data-gr="ΑΝΑΚΑΛΥΨΕ ΤΟ STUDYPLANNER">
+                DISCOVER STUDYPLANNER
+            </p>
+
+            <h1 data-en="Everything you need for a productive semester."
+                data-gr="Όλα όσα χρειάζεσαι για ένα παραγωγικό εξάμηνο.">
+                Everything you need for a productive semester.
+            </h1>
+
+            <p data-en="One workspace to organize your courses, assignments, notes and study sessions."
+               data-gr="Ένας χώρος για να οργανώνεις τα μαθήματα, τις εργασίες, τις σημειώσεις και τη μελέτη σου.">
+                One workspace to organize your courses,
+                assignments, notes and study sessions.
+            </p>
+
+        </div>
+
+        <div class="features-grid">
+
+            <article class="tour-card">
+                <div class="tour-icon">▦</div>
+
+                <h3 data-en="My Planner"
+                    data-gr="Το Πρόγραμμά μου">
+                    My Planner
+                </h3>
+
+                <p data-en="Schedule study sessions and keep track of important dates."
+                   data-gr="Προγραμμάτισε τη μελέτη σου και παρακολούθησε σημαντικές ημερομηνίες.">
+                    Schedule study sessions and keep
+                    track of important dates.
+                </p>
+            </article>
+
+            <article class="tour-card">
+                <div class="tour-icon">✓</div>
+
+                <h3 data-en="To-Do List"
+                    data-gr="Λίστα Εργασιών">
+                    To-Do List
+                </h3>
+
+                <p data-en="Add tasks, mark them as complete and follow your progress."
+                   data-gr="Πρόσθεσε εργασίες, ολοκλήρωσέ τις και παρακολούθησε την πρόοδό σου.">
+                    Add tasks, mark them as complete
+                    and follow your progress.
+                </p>
+            </article>
+
+            <article class="tour-card">
+                <div class="tour-icon">▤</div>
+
+                <h3 data-en="Study Notes"
+                    data-gr="Σημειώσεις Μελέτης">
+                    Study Notes
+                </h3>
+
+                <p data-en="Write your notes and download them as text documents."
+                   data-gr="Γράψε τις σημειώσεις σου και κατέβασέ τις ως αρχεία κειμένου.">
+                    Write your notes and download them
+                    as text documents.
+                </p>
+            </article>
+
+            <article class="tour-card">
+                <div class="tour-icon">◷</div>
+
+                <h3 data-en="Study Timer"
+                    data-gr="Χρονόμετρο Μελέτης">
+                    Study Timer
+                </h3>
+
+                <p data-en="Use a focus timer to manage your study sessions."
+                   data-gr="Χρησιμοποίησε το χρονόμετρο για να οργανώσεις τον χρόνο μελέτης σου.">
+                    Use a focus timer to manage
+                    your study sessions.
+                </p>
+            </article>
+
+            <article class="tour-card">
+                <div class="tour-icon">◫</div>
+
+                <h3 data-en="Dashboard"
+                    data-gr="Πίνακας Ελέγχου">
+                    Dashboard
+                </h3>
+
+                <p data-en="See your upcoming sessions, completed tasks and study progress."
+                   data-gr="Δες τις επόμενες συνεδρίες μελέτης, τις ολοκληρωμένες εργασίες και την πρόοδό σου.">
+                    See your upcoming sessions,
+                    completed tasks and study progress.
+                </p>
+            </article>
+
+            <article class="tour-card">
+                <div class="tour-icon">✉</div>
+
+                <h3 data-en="Contact Us"
+                    data-gr="Επικοινωνία">
+                    Contact Us
+                </h3>
+
+                <p data-en="Share your questions and suggestions through the contact form."
+                   data-gr="Στείλε ερωτήσεις και προτάσεις μέσω της φόρμας επικοινωνίας.">
+                    Share your questions and suggestions
+                    through the contact form.
+                </p>
+            </article>
+
+        </div>
+
+        <div class="features-bottom">
+
+            <button class="primary-btn"
+                    onclick="showStage('signup')"
+                    data-en="Create Your Workspace →"
+                    data-gr="Δημιούργησε τον Χώρο σου →">
+                Create Your Workspace →
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- STAGE 3: SIGN UP -->
+
+    <section id="welcome-section" class="journey-section">
+
+        <div class="signup-intro">
+
+            <p class="eyebrow"
+               data-en="JOIN STUDYPLANNER"
+               data-gr="ΓΙΝΕ ΜΕΛΟΣ ΤΟΥ STUDYPLANNER">
+                JOIN STUDYPLANNER
+            </p>
+
+            <h1 id="welcome"
+                data-en="Create Your Workspace."
+                data-gr="Δημιούργησε τον Χώρο σου.">
+                Create Your Workspace.
+            </h1>
+
+            <p id="description"
+               data-en="Your university journey starts with better organization."
+               data-gr="Το πανεπιστημιακό σου ταξίδι ξεκινά με καλύτερη οργάνωση.">
+                Your university journey starts
+                with better organization.
+            </p>
+
+            <div class="intro-features">
+
+                <p data-en="✓ Organize your study sessions"
+                   data-gr="✓ Οργάνωσε τη μελέτη σου">
+                    ✓ Organize your study sessions
+                </p>
+
+                <p data-en="✓ Manage university assignments"
+                   data-gr="✓ Διαχειρίσου τις εργασίες σου">
+                    ✓ Manage university assignments
+                </p>
+
+                <p data-en="✓ Stay focused and productive"
+                   data-gr="✓ Μείνε συγκεντρωμένος και παραγωγικός">
+                    ✓ Stay focused and productive
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="signup-card">
+
+            <h2 id="signup-title"
+                data-en="Create Your Account"
+                data-gr="Δημιουργία Λογαριασμού">
+                Create Your Account
+            </h2>
+
+            <p id="signup-description"
+               data-en="Enter your details to access your study workspace."
+               data-gr="Συμπλήρωσε τα στοιχεία σου για να μπεις στον χώρο μελέτης σου.">
+                Enter your details to access
+                your study workspace.
+            </p>
+
+            <form id="signup-form" onsubmit="signUp(event)">
+
+                <label for="first-name"
+                       data-en="First Name"
+                       data-gr="Όνομα">
+                    First Name
+                </label>
+
+                <input type="text" id="first-name" required>
+
+                <label for="surname"
+                       data-en="Surname"
+                       data-gr="Επώνυμο">
+                    Surname
+                </label>
+
+                <input type="text" id="surname" required>
+
+                <label for="university"
+                       data-en="University"
+                       data-gr="Πανεπιστήμιο">
+                    University
+                </label>
+
+                <select id="university" required>
+
+                    <option value=""
+                            data-en="Select your university"
+                            data-gr="Επίλεξε πανεπιστήμιο">
+                        Select your university
+                    </option>
+
+                    <option value="European University Cyprus">
+                        European University Cyprus
+                    </option>
+
+                    <option value="University of Cyprus">
+                        University of Cyprus
+                    </option>
+
+                    <option value="University of Nicosia">
+                        University of Nicosia
+                    </option>
+
+                    <option value="Frederick University">
+                        Frederick University
+                    </option>
+
+                    <option value="Cyprus University of Technology">
+                        Cyprus University of Technology
+                    </option>
+
+                    <option value="UCLan Cyprus">
+                        UCLan Cyprus
+                    </option>
+
+                    <option value="Neapolis University Pafos">
+                        Neapolis University Pafos
+                    </option>
+
+                    <option value="Open University of Cyprus">
+                        Open University of Cyprus
+                    </option>
+
+                    <option value="Other"
+                            data-en="Other"
+                            data-gr="Άλλο">
+                        Other
+                    </option>
+
+                </select>
+
+                <label for="birthday"
+                       data-en="Date of Birth"
+                       data-gr="Ημερομηνία Γέννησης">
+                    Date of Birth
+                </label>
+
+                <input type="date" id="birthday" required>
+
+                <label for="email"
+                       data-en="Email"
+                       data-gr="Email">
+                    Email
+                </label>
+
+                <input type="email" id="email" required>
+
+                <button type="submit"
+                        class="primary"
+                        id="signup-button"
+                        data-en="Enter My Workspace →"
+                        data-gr="Είσοδος στον Χώρο μου →">
+                    Enter My Workspace →
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+    <!-- STAGE 4: WORKSPACE -->
+
+    <div id="student-page">
+
+        <!-- SIDEBAR -->
+
+        <aside id="sidebar">
+
+            <h2 id="brand-title">✦ StudyPlanner</h2>
+
+            <p class="sidebar-heading"
+               data-en="WORKSPACE"
+               data-gr="ΧΩΡΟΣ ΜΕΛΕΤΗΣ">
+                WORKSPACE
+            </p>
+
+            <nav id="menu">
+
+                <a href="#dashboard-section"
+                   id="nav-dashboard"
+                   class="nav-item active"
+                   onclick="showSection('dashboard-section')">
+                    ◫ <span data-en="Dashboard"
+                            data-gr="Αρχική">Dashboard</span>
+                </a>
+
+                <a href="#planner-section"
+                   id="nav-planner"
+                   class="nav-item"
+                   onclick="showSection('planner-section')">
+                    ▦ <span data-en="My Planner"
+                            data-gr="Το Πρόγραμμά μου">My Planner</span>
+                </a>
+
+                <a href="#task-section"
+                   id="nav-task"
+                   class="nav-item"
+                   onclick="showSection('task-section')">
+                    ✓ <span data-en="To-Do List"
+                            data-gr="Λίστα Εργασιών">To-Do List</span>
+                </a>
+
+                <a href="#notes-section"
+                   id="nav-notes"
+                   class="nav-item"
+                   onclick="showSection('notes-section')">
+                    ▤ <span data-en="Study Notes"
+                            data-gr="Σημειώσεις Μελέτης">Study Notes</span>
+                </a>
+
+                <a href="#timer-section"
+                   id="nav-timer"
+                   class="nav-item"
+                   onclick="showSection('timer-section')">
+                    ◷ <span data-en="Study Timer"
+                            data-gr="Χρονόμετρο Μελέτης">Study Timer</span>
+                </a>
+
+                <a href="#contact-section"
+                   id="nav-contact"
+                   class="nav-item"
+                   onclick="showSection('contact-section')">
+                    ✉ <span data-en="Contact Us"
+                            data-gr="Επικοινωνία">Contact Us</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-profile">
+
+                <div class="avatar">✦</div>
+
+                <div>
+                    <strong id="profile-name">Student</strong>
+                    <p id="profile-university">University</p>
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+
+        <main id="main-content">
+
+            <div class="topbar">
+
+                <h2 id="student-welcome">Welcome!</h2>
+
+                <span class="status"
+                      data-en="● Your study space"
+                      data-gr="● Ο χώρος μελέτης σου">
+                    ● Your study space
+                </span>
+
+            </div>
+
+
+            <!-- DASHBOARD -->
+
+            <section id="dashboard-section" class="feature-section">
+
+                <div class="hero-card">
+
+                    <div>
+
+                        <p class="eyebrow"
+                           data-en="YOUR PRODUCTIVITY STARTS HERE"
+                           data-gr="Η ΠΑΡΑΓΩΓΙΚΟΤΗΤΑ ΞΕΚΙΝΑ ΕΔΩ">
+                            YOUR PRODUCTIVITY STARTS HERE
+                        </p>
+
+                        <h1 id="hero-title"
+                            data-en="Make today count."
+                            data-gr="Αξιοποίησε τη σημερινή μέρα.">
+                            Make today count.
+                        </h1>
+
+                        <p id="hero-description"
+                           data-en="Small steps, big progress. Your semester starts here."
+                           data-gr="Μικρά βήματα, μεγάλη πρόοδος.">
+                            Small steps, big progress.
+                            Your semester starts here.
+                        </p>
+
+                        <button class="hero-button"
+                                id="hero-button"
+                                onclick="showSection('planner-section')"
+                                data-en="Plan a Study Session →"
+                                data-gr="Προγραμμάτισε Μελέτη →">
+                            Plan a Study Session →
+                        </button>
+
+                    </div>
+
+                    <div class="hero-decoration">✦</div>
+
+                </div>
+
+                <h2 id="overview-title"
+                    data-en="My Dashboard"
+                    data-gr="Ο Πίνακάς μου">
+                    My Dashboard
+                </h2>
+
+                <div class="stats-grid">
+
+                    <div class="stat-card purple">
+                        <p id="task-stat-title"
+                           data-en="To-Do Tasks"
+                           data-gr="Εργασίες">
+                            To-Do Tasks
+                        </p>
+                        <h1 id="task-count">0</h1>
+                        <span>✓</span>
+                    </div>
+
+                    <div class="stat-card teal">
+                        <p id="study-stat-title"
+                           data-en="Study Sessions"
+                           data-gr="Συνεδρίες Μελέτης">
+                            Study Sessions
+                        </p>
+                        <h1 id="study-count">0</h1>
+                        <span>▦</span>
+                    </div>
+
+                    <div class="stat-card peach">
+                        <p id="completed-stat-title"
+                           data-en="Completed Tasks"
+                           data-gr="Ολοκληρωμένες Εργασίες">
+                            Completed Tasks
+                        </p>
+                        <h1 id="completed-count">0</h1>
+                        <span>★</span>
+                    </div>
+
+                </div>
+
+                <div class="content-card">
+
+                    <h3 id="dashboard-upcoming-title"
+                        data-en="Upcoming Sessions"
+                        data-gr="Προγραμματισμένες Μελέτες">
+                        Upcoming Sessions
+                    </h3>
+
+                    <ul id="dashboard-study-list"></ul>
+
+                </div>
+
+                <div class="content-card">
+
+                    <h3 id="tips-title"
+                        data-en="Study Tips"
+                        data-gr="Συμβουλές Μελέτης">
+                        Study Tips
+                    </h3>
+
+                    <table>
+
+                        <tr>
+                            <th id="tip-heading"
+                                data-en="Tip"
+                                data-gr="Συμβουλή">Tip</th>
+
+                            <th id="description-heading"
+                                data-en="Description"
+                                data-gr="Περιγραφή">Description</th>
+                        </tr>
+
+                        <tr>
+                            <td id="tip-one"
+                                data-en="Planning"
+                                data-gr="Πρόγραμμα">Planning</td>
+
+                            <td id="tip-one-description"
+                                data-en="Organize your study time."
+                                data-gr="Οργάνωσε τον χρόνο μελέτης σου.">
+                                Organize your study time.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td id="tip-two"
+                                data-en="Breaks"
+                                data-gr="Διαλείμματα">Breaks</td>
+
+                            <td id="tip-two-description"
+                                data-en="Take regular short breaks."
+                                data-gr="Κάνε τακτικά μικρά διαλείμματα.">
+                                Take regular short breaks.
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <!-- MY PLANNER -->
+
+            <section id="planner-section" class="feature-section">
+
+                <div class="page-heading">
+
+                    <h1 id="planner-title"
+                        data-en="My Planner"
+                        data-gr="Το Πρόγραμμά μου">
+                        My Planner
+                    </h1>
+
+                    <p id="planner-description"
+                       data-en="Organize your study sessions."
+                       data-gr="Οργάνωσε τις συνεδρίες μελέτης σου.">
+                        Organize your study sessions.
+                    </p>
+
+                </div>
+
+                <div class="content-card">
+
+                    <h3 id="new-study-title"
+                        data-en="New Study Session"
+                        data-gr="Νέα Συνεδρία Μελέτης">
+                        New Study Session
+                    </h3>
+
+                    <form onsubmit="addStudy(event)">
+
+                        <label for="subject"
+                               id="subject-label"
+                               data-en="Subject"
+                               data-gr="Μάθημα">
+                            Subject
+                        </label>
+
+                        <input type="text" id="subject" required>
+
+                        <label for="study-date"
+                               id="study-date-label"
+                               data-en="Date"
+                               data-gr="Ημερομηνία">
+                            Date
+                        </label>
+
+                        <input type="date" id="study-date" required>
+
+                        <label for="study-time"
+                               id="study-time-label"
+                               data-en="Time"
+                               data-gr="Ώρα">
+                            Time
+                        </label>
+
+                        <input type="time" id="study-time" required>
+
+                        <button type="submit"
+                                class="primary"
+                                id="add-study-button"
+                                data-en="Add Study Session"
+                                data-gr="Προσθήκη Μελέτης">
+                            Add Study Session
+                        </button>
+
+                    </form>
+
+                </div>
+
+                <div class="content-card">
+
+                    <h3 id="upcoming-title"
+                        data-en="Upcoming Sessions"
+                        data-gr="Προγραμματισμένες Μελέτες">
+                        Upcoming Sessions
+                    </h3>
+
+                    <ul id="study-list"></ul>
+
+                </div>
+
+            </section>
+
+
+            <!-- TO-DO LIST -->
+
+            <section id="task-section" class="feature-section">
+
+                <div class="page-heading">
+
+                    <h1 id="tasks-title"
+                        data-en="To-Do List"
+                        data-gr="Λίστα Εργασιών">
+                        To-Do List
+                    </h1>
+
+                    <p id="tasks-description"
+                       data-en="Stay on top of your assignments."
+                       data-gr="Οργάνωσε τις εργασίες σου.">
+                        Stay on top of your assignments.
+                    </p>
+
+                </div>
+
+                <div class="content-card">
+
+                    <h3 id="new-task-title"
+                        data-en="Add a Task"
+                        data-gr="Προσθήκη Εργασίας">
+                        Add a Task
+                    </h3>
+
+                    <form onsubmit="addTask(event)">
+
+                        <label for="new-task"
+                               id="task-label"
+                               data-en="New Task"
+                               data-gr="Νέα Εργασία">
+                            New Task
+                        </label>
+
+                        <input type="text"
+                               id="new-task"
+                               placeholder="Enter a task"
+                               required>
+
+                        <button type="submit"
+                                class="primary"
+                                id="add-task-button"
+                                data-en="Add Task"
+                                data-gr="Προσθήκη Εργασίας">
+                            Add Task
+                        </button>
+
+                    </form>
+
+                </div>
+
+                <div class="content-card">
+
+                    <h3 id="my-tasks-title"
+                        data-en="My Tasks"
+                        data-gr="Οι Εργασίες μου">
+                        My Tasks
+                    </h3>
+
+                    <ul id="task-list"></ul>
+
+                </div>
+
+            </section>
+
+
+            <!-- STUDY NOTES -->
+
+            <section id="notes-section" class="feature-section">
+
+                <div class="page-heading">
+
+                    <h1 id="notes-title"
+                        data-en="Study Notes"
+                        data-gr="Σημειώσεις Μελέτης">
+                        Study Notes
+                    </h1>
+
+                    <p id="notes-description"
+                       data-en="Write and organize your notes."
+                       data-gr="Γράψε και οργάνωσε τις σημειώσεις σου.">
+                        Write and organize your notes.
+                    </p>
+
+                </div>
+
+                <div class="content-card">
+
+                    <h3 id="notebook-title"
+                        data-en="My Notebook"
+                        data-gr="Το Σημειωματάριό μου">
+                        My Notebook
+                    </h3>
+
+                    <textarea id="study-notes"
+                              rows="12"
+                              placeholder="Write your notes here..."></textarea>
+
+                    <div class="notes-buttons">
+
+                        <button class="primary"
+                                id="save-notes-button"
+                                onclick="saveNotes()"
+                                data-en="Save Notes"
+                                data-gr="Αποθήκευση Σημειώσεων">
+                            Save Notes
+                        </button>
+
+                        <button class="secondary-button"
+                                id="download-notes"
+                                onclick="downloadNotes()"
+                                data-en="Download Notes"
+                                data-gr="Λήψη Σημειώσεων">
+                            Download Notes
+                        </button>
+
+                    </div>
+
+                    <p id="notes-message"></p>
+
+                </div>
+
+            </section>
+
+
+            <!-- STUDY TIMER -->
+
+            <section id="timer-section" class="feature-section">
+
+                <div class="page-heading">
+
+                    <h1 id="timer-title"
+                        data-en="Study Timer"
+                        data-gr="Χρονόμετρο Μελέτης">
+                        Study Timer
+                    </h1>
+
+                    <p id="timer-description"
+                       data-en="Focus on your study goals."
+                       data-gr="Συγκεντρώσου στους στόχους σου.">
+                        Focus on your study goals.
+                    </p>
+
+                </div>
+
+                <div class="content-card" id="timer-card">
+
+                    <h3 id="focus-title"
+                        data-en="Focus Session"
+                        data-gr="Ώρα Μελέτης">
+                        Focus Session
+                    </h3>
+
+                    <div id="timer-circle">
+
+                        <div id="timer-inner">
+
+                            <h1 id="timer-display">25:00</h1>
+
+                            <p id="remaining-label"
+                               data-en="Time remaining"
+                               data-gr="Χρόνος που απομένει">
+                                Time remaining
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <label for="timer-minutes"
+                           id="minutes-label"
+                           data-en="Study Minutes"
+                           data-gr="Λεπτά Μελέτης">
+                        Study Minutes
+                    </label>
+
+                    <input type="number"
+                           id="timer-minutes"
+                           min="1"
+                           max="180"
+                           value="25"
+                           onchange="resetTimer()">
+
+                    <div id="timer-buttons">
+
+                        <button class="primary"
+                                id="start-button"
+                                onclick="startTimer()"
+                                data-en="Start"
+                                data-gr="Έναρξη">
+                            Start
+                        </button>
+
+                        <button class="secondary-button"
+                                id="pause-button"
+                                onclick="pauseTimer()"
+                                data-en="Pause"
+                                data-gr="Παύση">
+                            Pause
+                        </button>
+
+                        <button class="secondary-button"
+                                id="reset-button"
+                                onclick="resetTimer()"
+                                data-en="Reset"
+                                data-gr="Επαναφορά">
+                            Reset
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- CONTACT US -->
+
+            <section id="contact-section" class="feature-section">
+
+                <div class="page-heading">
+
+                    <h1 id="contact-title"
+                        data-en="Contact Us"
+                        data-gr="Επικοινωνία">
+                        Contact Us
+                    </h1>
+
+                    <p id="contact-description"
+                       data-en="Have a question or suggestion? Contact us."
+                       data-gr="Έχεις κάποια ερώτηση ή πρόταση; Επικοινώνησε μαζί μας.">
+                        Have a question or suggestion?
+                        Contact us.
+                    </p>
+
+                </div>
+
+                <div class="content-card">
+
+                    <form onsubmit="sendContact(event)">
+
+                        <label for="contact-name" id="contact-name-label"
+                               data-en="Name"
+                               data-gr="Όνομα">
+                            Name
+                        </label>
+
+                        <input type="text"  id="contact-name"
+                          required>
+
+                        <label for="contact-email" id="contact-email-label"
+                            data-en="Email" data-gr="Email">
+                            Email
+                        </label>
+
+                        <input type="email" id ="contact-email"
+                               required>
+
+                        <label for="contact-phone"
+                               id="contact-phone-label"
+                               data-en="Telephone Number"
+                               data-gr="Αριθμός Τηλεφώνου">
+                            Telephone Number
+                        </label>
+
+                        <input type="tel"
+                               id="contact-phone"
+                               minlength="8"
+                               maxlength="15"
+                               required>
+
+                        <label for="contact-message"
+                               id="contact-message-label"
+                               data-en="Message"
+                               data-gr="Μήνυμα">
+                            Message
+                        </label>
+
+                        <textarea id="contact-message"
+                                  rows="6"
+                                  maxlength="200"
+                                  required></textarea>
+
+                        <p id="character-count">0 / 200</p>
+
+                        <p id="typing-message"></p>
+
+                        <button type="submit"
+                                class="primary"
+                                id="send-button"
+                                data-en="Send Message"
+                                data-gr="Αποστολή Μηνύματος">
+                            Send Message
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+
+            <!-- FOOTER -->
+
+            <footer>
+                © 2026 StudyPlanner.
+                <span data-en="Designed for students."
+                      data-gr="Σχεδιασμένο για φοιτητές.">
+                    Designed for students.
+                </span>
+            </footer>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
+

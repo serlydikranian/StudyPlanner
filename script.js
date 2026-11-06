@@ -1,466 +1,1065 @@
 let studies = [];
 let tasks = [];
 let savedNotes = "";
+
+let studentRegistered = false;
+let studentProfile = null;
+
+let currentStage = "explore";
+let currentSection = "dashboard-section";
+
+let timerInterval = null;
 let timerRunning = false;
 
-$(document).ready(function() {
-    $("#brand-title").mouseenter(function() {
-        document.getElementById("brand-title").innerHTML = "✦ Stay Focused!";
+let totalSeconds = 25 * 60;
+let secondsLeft = totalSeconds;
+
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    loadSavedData();
+
+    let savedLanguage = localStorage.getItem("studyLanguage");
+
+    if (savedLanguage === "gr") {
+        document.getElementById("language").value = "gr";
+    }
+
+    changeLanguage();
+
+    showStage("explore");
+
+    showSection("dashboard-section");
+
+    renderStudies();
+    renderTasks();
+    updateDashboard();
+
+    resetTimer();
+
+    /* Prevent sidebar links from scrolling
+       to hidden sections */
+
+    document.querySelectorAll("#menu a").forEach(function (link) {
+
+        link.addEventListener("click", function (event) {
+            event.preventDefault();
+        });
+
     });
 
-    $("#brand-title").mouseleave(function() {
-        document.getElementById("brand-title").innerHTML = "✦ StudyPlanner";
+    /* Contact message character counter */
+
+    let messageBox = document.getElementById("contact-message");
+
+    messageBox.addEventListener("input", function () {
+
+        let length = messageBox.value.length;
+
+        document.getElementById("character-count").textContent =
+            length + " / 200";
+
+        let typingMessage = document.getElementById("typing-message");
+
+        if (length > 0) {
+
+            typingMessage.textContent =
+                getLanguage() === "gr"
+                ? "Γράφεις ένα μήνυμα..."
+                : "You are writing a message...";
+
+        } else {
+
+            typingMessage.textContent = "";
+
+        }
+
     });
 
-    $("#contact-message").keydown(function() {
-        $("#typing-message").show();
-    });
-
-    $("#contact-message").keyup(function() {
-        let message = document.getElementById("contact-message").value;
-        document.getElementById("character-count").innerHTML =
-            message.length + " / 200";
-    });
 });
 
-function getLanguage() {
-    return document.getElementById("language").value;
+
+
+function saveData() {
+
+    localStorage.setItem(
+        "studyPlannerStudies",
+        JSON.stringify(studies)
+    );
+
+    localStorage.setItem(
+        "studyPlannerTasks",
+        JSON.stringify(tasks)
+    );
+
+    localStorage.setItem(
+        "studyPlannerNotes",
+        savedNotes
+    );
+
+    if (studentProfile !== null) {
+
+        localStorage.setItem(
+            "studyPlannerProfile",
+            JSON.stringify(studentProfile)
+        );
+
+    }
+
 }
+
+
+function loadSavedData() {
+
+    try {
+
+        let savedStudies = localStorage.getItem("studyPlannerStudies");
+        let savedTasks = localStorage.getItem("studyPlannerTasks");
+        let savedProfile = localStorage.getItem("studyPlannerProfile");
+
+        if (savedStudies !== null) {
+
+            let result = JSON.parse(savedStudies);
+
+            if (Array.isArray(result)) {
+                studies = result;
+            }
+
+        }
+
+        if (savedTasks !== null) {
+
+            let result = JSON.parse(savedTasks);
+
+            if (Array.isArray(result)) {
+                tasks = result;
+            }
+
+        }
+
+        savedNotes = localStorage.getItem("studyPlannerNotes") || "";
+
+        document.getElementById("study-notes").value = savedNotes;
+
+        if (savedProfile !== null) {
+
+            studentProfile = JSON.parse(savedProfile);
+
+            if (studentProfile && studentProfile.firstName) {
+
+                studentRegistered = true;
+
+                updateStudentProfile();
+
+            }
+
+        }
+
+    } catch (error) {
+
+        console.log("Could not load saved data.");
+
+    }
+
+}
+
+
+
+function showStage(stage) {
+
+    let validStages = [
+        "explore",
+        "features",
+        "signup",
+        "workspace"
+    ];
+
+    if (!validStages.includes(stage)) {
+        return false;
+    }
+
+    /* Students must register before
+       accessing the workspace */
+
+    if (stage === "workspace" && !studentRegistered) {
+        stage = "signup";
+    }
+
+    currentStage = stage;
+
+    let sections = {
+        explore: "explore-section",
+        features: "features-tour",
+        signup: "welcome-section",
+        workspace: "student-page"
+    };
+
+    /* Hide all stages */
+
+    for (let name in sections) {
+
+        document.getElementById(sections[name]).style.display = "none";
+
+    }
+
+    /* Display selected stage */
+
+    let selected = document.getElementById(sections[stage]);
+
+    if (stage === "signup") {
+
+        selected.style.display = "flex";
+
+    } else {
+
+        selected.style.display = "block";
+
+    }
+
+    /* Update navigation */
+
+    document.querySelectorAll(".stage-link").forEach(function (link) {
+
+        link.classList.remove("active");
+
+    });
+
+    document.getElementById("stage-" + stage).classList.add("active");
+
+    /* Update progress bar */
+
+    let progress = {
+        explore: "25%",
+        features: "50%",
+        signup: "75%",
+        workspace: "100%"
+    };
+
+    document.getElementById("stage-progress-fill").style.width =
+        progress[stage];
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+    return false;
+
+}
+
+
+
+function getLanguage() {
+
+    return document.getElementById("language").value;
+
+}
+
 
 function setText(id, english, greek) {
-    if (getLanguage() == "gr") {
-        document.getElementById(id).innerHTML = greek;
+
+    let element = document.getElementById(id);
+
+    if (element !== null) {
+
+        element.textContent =
+            getLanguage() === "gr" ? greek : english;
+
     }
-    else {
-        document.getElementById(id).innerHTML = english;
-    }
+
 }
 
+
 function changeLanguage() {
+
     let language = getLanguage();
 
-    if (language == "") {
+    localStorage.setItem("studyLanguage", language);
+
+    document.documentElement.lang =
+        language === "gr" ? "el" : "en";
+
+
+
+    document.querySelectorAll("[data-en][data-gr]").forEach(function (element) {
+
+        if (language === "gr") {
+
+            element.textContent = element.getAttribute("data-gr");
+
+        } else {
+
+            element.textContent = element.getAttribute("data-en");
+
+        }
+
+    });
+
+
+    document.getElementById("new-task").placeholder =
+        language === "gr"
+        ? "Γράψε μια εργασία"
+        : "Enter a task";
+
+    document.getElementById("study-notes").placeholder =
+        language === "gr"
+        ? "Γράψε τις σημειώσεις σου εδώ..."
+        : "Write your notes here...";
+
+    /* Update personalized welcome */
+
+    updateStudentProfile();
+
+    /* Refresh lists in selected language */
+
+    renderStudies();
+    renderTasks();
+    updateDashboard();
+
+}
+
+
+
+function signUp(event) {
+
+    event.preventDefault();
+
+    let firstName = document.getElementById("first-name").value.trim();
+
+    let surname = document.getElementById("surname").value.trim();
+
+    let university = document.getElementById("university").value;
+
+    let birthday = document.getElementById("birthday").value;
+
+    let email = document.getElementById("email").value.trim();
+
+    if (
+        firstName === "" ||
+        surname === "" ||
+        university === "" ||
+        birthday === "" ||
+        email === ""
+    ) {
+
+        alert(
+            getLanguage() === "gr"
+            ? "Παρακαλώ συμπλήρωσε όλα τα πεδία."
+            : "Please complete all fields."
+        );
+
+        return;
+
+    }
+
+    studentProfile = {
+        firstName: firstName,
+        surname: surname,
+        university: university,
+        birthday: birthday,
+        email: email
+    };
+
+    studentRegistered = true;
+
+    saveData();
+
+    updateStudentProfile();
+
+    showStage("workspace");
+
+    showSection("dashboard-section");
+
+}
+
+
+function updateStudentProfile() {
+
+    if (studentProfile === null) {
         return;
     }
 
-    setText("welcome", "Your semester, organized.", "Οργάνωσε το εξάμηνό σου.");
-    setText("description", "Plan smarter, track your progress and keep everything in one place.", "Οργάνωσε τη μελέτη σου και παρακολούθησε την πρόοδό σου.");
-    setText("signup-title", "Create Your Account", "Δημιουργία Λογαριασμού");
-    setText("signup-description", "Your university journey starts here.", "Το πανεπιστημιακό σου ταξίδι ξεκινά εδώ.");
-    setText("name-label", "First Name", "Όνομα");
-    setText("surname-label", "Surname", "Επώνυμο");
-    setText("university-label", "University", "Πανεπιστήμιο");
-    setText("birthday-label", "Date of Birth", "Ημερομηνία Γέννησης");
-    setText("email-label", "Email", "Email");
-    setText("signup-button", "Enter My Workspace", "Είσοδος στον Χώρο μου");
+    let fullName =
+        studentProfile.firstName + " " + studentProfile.surname;
 
-    setText("dashboard-menu", "Dashboard", "Αρχική");
-    setText("planner-menu", "My Planner", "Το Πρόγραμμά μου");
-    setText("task-menu", "To-Do List", "Λίστα Εργασιών");
-    setText("notes-menu", "Study Notes", "Σημειώσεις Μελέτης");
-    setText("timer-menu", "Study Timer", "Χρονόμετρο Μελέτης");
-    setText("contact-menu", "Contact Us", "Επικοινωνία");
-
-    setText("hero-title", "Make today count.", "Αξιοποίησε τη σημερινή μέρα.");
-    setText("hero-description", "Small steps, big progress. Your semester starts here.", "Μικρά βήματα, μεγάλη πρόοδος.");
-    setText("hero-button", "Plan a Study Session →", "Προγραμμάτισε Μελέτη →");
-    setText("overview-title", "My Dashboard", "Ο Πίνακάς μου");
-    setText("task-stat-title", "To-Do Tasks", "Εργασίες");
-    setText("study-stat-title", "Study Sessions", "Συνεδρίες Μελέτης");
-    setText("completed-stat-title", "Completed Tasks", "Ολοκληρωμένες Εργασίες");
-    setText("dashboard-upcoming-title", "Upcoming Sessions", "Προγραμματισμένες Μελέτες");
-
-    setText("tips-title", "Study Tips", "Συμβουλές Μελέτης");
-    setText("tip-heading", "Tip", "Συμβουλή");
-    setText("description-heading", "Description", "Περιγραφή");
-    setText("tip-one", "Planning", "Πρόγραμμα");
-    setText("tip-one-description", "Organize your study time.", "Οργάνωσε τον χρόνο μελέτης σου.");
-    setText("tip-two", "Breaks", "Διαλείμματα");
-    setText("tip-two-description", "Take regular short breaks.", "Κάνε τακτικά μικρά διαλείμματα.");
-
-    setText("planner-title", "My Planner", "Το Πρόγραμμά μου");
-    setText("planner-description", "Organize your study sessions.", "Οργάνωσε τις συνεδρίες μελέτης σου.");
-    setText("new-study-title", "New Study Session", "Νέα Συνεδρία Μελέτης");
-    setText("subject-label", "Subject", "Μάθημα");
-    setText("study-date-label", "Date", "Ημερομηνία");
-    setText("study-time-label", "Time", "Ώρα");
-    setText("add-study-button", "Add Study Session", "Προσθήκη Μελέτης");
-    setText("upcoming-title", "Upcoming Sessions", "Προγραμματισμένες Μελέτες");
-
-    setText("tasks-title", "To-Do List", "Λίστα Εργασιών");
-    setText("tasks-description", "Stay on top of your assignments.", "Οργάνωσε τις εργασίες σου.");
-    setText("new-task-title", "Add a Task", "Προσθήκη Εργασίας");
-    setText("task-label", "New Task", "Νέα Εργασία");
-    setText("add-task-button", "Add Task", "Προσθήκη Εργασίας");
-    setText("my-tasks-title", "My Tasks", "Οι Εργασίες μου");
-
-    setText("notes-title", "Study Notes", "Σημειώσεις Μελέτης");
-    setText("notes-description", "Write and organize your notes.", "Γράψε και οργάνωσε τις σημειώσεις σου.");
-    setText("notebook-title", "My Notebook", "Το Σημειωματάριό μου");
-    setText("save-notes-button", "Save Notes", "Αποθήκευση Σημειώσεων");
-
-    setText("timer-title", "Study Timer", "Χρονόμετρο Μελέτης");
-    setText("timer-description", "Focus on your study goals.", "Συγκεντρώσου στους στόχους σου.");
-    setText("focus-title", "Focus Session", "Ώρα Μελέτης");
-    setText("minutes-label", "Study Minutes", "Λεπτά Μελέτης");
-    setText("start-button", "Start", "Έναρξη");
-
-    setText("contact-title", "Contact Us", "Επικοινωνία");
-    setText("contact-description", "Have a question or suggestion? Contact us.", "Έχεις κάποια ερώτηση ή πρόταση; Επικοινώνησε μαζί μας.");
-    setText("contact-name-label", "Name", "Όνομα");
-    setText("contact-email-label", "Email", "Email");
-    setText("contact-phone-label", "Telephone Number", "Αριθμός Τηλεφώνου");
-    setText("contact-message-label", "Message", "Μήνυμα");
-    setText("send-button", "Send Message", "Αποστολή Μηνύματος");
-
-    if (language == "gr") {
-        document.getElementById("new-task").placeholder = "Πρόσθεσε μια εργασία";
-        document.getElementById("study-notes").placeholder = "Γράψε τις σημειώσεις σου...";
-        document.getElementById("university").options[0].text = "Επίλεξε πανεπιστήμιο";
-    }
-    else {
-        document.getElementById("new-task").placeholder = "Enter a task";
-        document.getElementById("study-notes").placeholder = "Write your notes here...";
-        document.getElementById("university").options[0].text = "Select your university";
-    }
-
-    document.getElementById("language-box").style.display = "none";
-
-    renderStudies();
-    renderTasks();
-}
-
-function signUp(event) {
-    event.preventDefault();
-
-    let name = document.getElementById("first-name").value;
-    let surname = document.getElementById("surname").value;
-    let university = document.getElementById("university").value;
-
-    if (getLanguage() == "gr") {
-        document.getElementById("student-welcome").innerHTML =
-            "Καλώς ήρθες, " + name + "!";
-    }
-    else {
-        document.getElementById("student-welcome").innerHTML =
-            "Welcome, " + name + "!";
-    }
-
-    document.getElementById("profile-name").textContent =
-        name + " " + surname;
+    document.getElementById("profile-name").textContent = fullName;
 
     document.getElementById("profile-university").textContent =
-        university;
+        studentProfile.university;
 
-    $("#welcome-section").hide();
-    $("#student-page").show();
-    $("#language-box").hide();
+    if (getLanguage() === "gr") {
 
-    showSection("dashboard-section");
+        document.getElementById("student-welcome").textContent =
+            "Καλώς ήρθες, " + studentProfile.firstName + "!";
+
+    } else {
+
+        document.getElementById("student-welcome").textContent =
+            "Welcome, " + studentProfile.firstName + "!";
+
+    }
+
 }
+
+
+
 
 function showSection(sectionId) {
-    $(".feature-section").hide();
-    $("#" + sectionId).show();
 
-    document.getElementById("nav-dashboard").className = "nav-item";
-    document.getElementById("nav-planner").className = "nav-item";
-    document.getElementById("nav-task").className = "nav-item";
-    document.getElementById("nav-notes").className = "nav-item";
-    document.getElementById("nav-timer").className = "nav-item";
-    document.getElementById("nav-contact").className = "nav-item";
+    let selectedSection = document.getElementById(sectionId);
 
-    if (sectionId == "dashboard-section") {
-        document.getElementById("nav-dashboard").className = "nav-item active";
+    if (
+        selectedSection === null ||
+        !selectedSection.classList.contains("feature-section")
+    ) {
+        return;
     }
-    else if (sectionId == "planner-section") {
-        document.getElementById("nav-planner").className = "nav-item active";
+
+    currentSection = sectionId;
+
+    /* Hide all workspace sections */
+
+    document.querySelectorAll(".feature-section").forEach(function (section) {
+
+        section.style.display = "none";
+
+    });
+
+    /* Show selected section */
+
+    selectedSection.style.display = "block";
+
+    /* Remove active sidebar styling */
+
+    document.querySelectorAll(".nav-item").forEach(function (item) {
+
+        item.classList.remove("active");
+
+    });
+
+    /* Find matching navigation link */
+
+    let navigation = {
+        "dashboard-section": "nav-dashboard",
+        "planner-section": "nav-planner",
+        "task-section": "nav-task",
+        "notes-section": "nav-notes",
+        "timer-section": "nav-timer",
+        "contact-section": "nav-contact"
+    };
+
+    let activeLink = document.getElementById(navigation[sectionId]);
+
+    if (activeLink !== null) {
+
+        activeLink.classList.add("active");
+
     }
-    else if (sectionId == "task-section") {
-        document.getElementById("nav-task").className = "nav-item active";
-    }
-    else if (sectionId == "notes-section") {
-        document.getElementById("nav-notes").className = "nav-item active";
-    }
-    else if (sectionId == "timer-section") {
-        document.getElementById("nav-timer").className = "nav-item active";
-    }
-    else {
-        document.getElementById("nav-contact").className = "nav-item active";
-    }
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
 }
 
-function safeText(value) {
-    let result = "";
 
-    for (let i = 0; i < value.length; i++) {
-        if (value[i] == "&") {
-            result += "&amp;";
-        }
-        else if (value[i] == "<") {
-            result += "&lt;";
-        }
-        else if (value[i] == ">") {
-            result += "&gt;";
-        }
-        else if (value[i] == '"') {
-            result += "&quot;";
-        }
-        else if (value[i] == "'") {
-            result += "&#39;";
-        }
-        else {
-            result += value[i];
-        }
-    }
 
-    return result;
-}
 
 function addStudy(event) {
+
     event.preventDefault();
 
-    let subject = document.getElementById("subject").value;
+    let subject = document.getElementById("subject").value.trim();
+
     let date = document.getElementById("study-date").value;
+
     let time = document.getElementById("study-time").value;
 
-    studies.push({
+    if (subject === "" || date === "" || time === "") {
+
+        alert(
+            getLanguage() === "gr"
+            ? "Συμπλήρωσε όλα τα πεδία."
+            : "Please fill in all fields."
+        );
+
+        return;
+
+    }
+
+    let study = {
+        id: Date.now() + Math.random(),
         subject: subject,
         date: date,
         time: time
+    };
+
+    studies.push(study);
+
+    /* Sort sessions by date and time */
+
+    studies.sort(function (a, b) {
+
+        let first = a.date + " " + a.time;
+        let second = b.date + " " + b.time;
+
+        return first.localeCompare(second);
+
     });
 
+    saveData();
+
     renderStudies();
-    event.target.reset();
+    updateDashboard();
+
+    document.getElementById("subject").value = "";
+    document.getElementById("study-date").value = "";
+    document.getElementById("study-time").value = "";
+
 }
+
+
+function formatStudyDate(date, time) {
+
+    let studyDate = new Date(date + "T" + time);
+
+    let language = getLanguage() === "gr" ? "el-GR" : "en-GB";
+
+    if (isNaN(studyDate.getTime())) {
+
+        return date + " " + time;
+
+    }
+
+    return studyDate.toLocaleString(language, {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+
+}
+
 
 function renderStudies() {
-    let html = "";
-    let dashboardHtml = "";
 
-    for (let i = 0; i < studies.length; i++) {
-        let session = safeText(studies[i].subject) + " | " +
-                      safeText(studies[i].date) + " | " +
-                      safeText(studies[i].time);
+    let studyList = document.getElementById("study-list");
 
-        let deleteLabel = "Delete";
+    studyList.innerHTML = "";
 
-        if (getLanguage() == "gr") {
-            deleteLabel = "Διαγραφή";
-        }
+    if (studies.length === 0) {
 
-        html += "<li>" + session +
-                ' <button onclick="deleteStudy(' + i + ')">' +
-                deleteLabel + "</button></li>";
+        let empty = document.createElement("li");
 
-        dashboardHtml += "<li>" + session + "</li>";
+        empty.textContent =
+            getLanguage() === "gr"
+            ? "Δεν υπάρχουν προγραμματισμένες μελέτες."
+            : "No study sessions scheduled yet.";
+
+        studyList.appendChild(empty);
+
+        return;
+
     }
 
-    document.getElementById("study-list").innerHTML = html;
-    document.getElementById("dashboard-study-list").innerHTML = dashboardHtml;
-    document.getElementById("study-count").innerHTML = studies.length;
-}
+    studies.forEach(function (study) {
 
-function deleteStudy(index) {
-    let newStudies = [];
+        let item = document.createElement("li");
 
-    for (let i = 0; i < studies.length; i++) {
-        if (i != index) {
-            newStudies.push(studies[i]);
-        }
-    }
+        let title = document.createElement("strong");
+        title.textContent = study.subject;
 
-    studies = newStudies;
-    renderStudies();
-}
+        let date = document.createElement("p");
+        date.textContent = formatStudyDate(study.date, study.time);
 
-function addTask(event) {
-    event.preventDefault();
+        let button = document.createElement("button");
 
-    let task = document.getElementById("new-task").value;
+        button.textContent =
+            getLanguage() === "gr" ? "Διαγραφή" : "Delete";
 
-    tasks.push({
-        text: task,
-        completed: false
+        button.onclick = function () {
+            deleteStudy(study.id);
+        };
+
+        item.appendChild(title);
+        item.appendChild(date);
+        item.appendChild(button);
+
+        studyList.appendChild(item);
+
     });
 
-    renderTasks();
-    event.target.reset();
 }
+
+
+function deleteStudy(id) {
+
+    studies = studies.filter(function (study) {
+
+        return study.id !== id;
+
+    });
+
+    saveData();
+
+    renderStudies();
+    updateDashboard();
+
+}
+
+
+
+function addTask(event) {
+
+    event.preventDefault();
+
+    let taskInput = document.getElementById("new-task");
+
+    let taskName = taskInput.value.trim();
+
+    if (taskName === "") {
+
+        alert(
+            getLanguage() === "gr"
+            ? "Γράψε μια εργασία."
+            : "Please enter a task."
+        );
+
+        return;
+
+    }
+
+    let task = {
+        id: Date.now() + Math.random(),
+        name: taskName,
+        completed: false
+    };
+
+    tasks.push(task);
+
+    saveData();
+
+    renderTasks();
+    updateDashboard();
+
+    taskInput.value = "";
+
+}
+
 
 function renderTasks() {
-    let html = "";
-    let completed = 0;
 
-    for (let i = 0; i < tasks.length; i++) {
-        let taskClass = "";
-        let completeLabel = "Complete";
-        let deleteLabel = "Delete";
+    let taskList = document.getElementById("task-list");
 
-        if (getLanguage() == "gr") {
-            completeLabel = "Ολοκλήρωση";
-            deleteLabel = "Διαγραφή";
-        }
+    taskList.innerHTML = "";
 
-        if (tasks[i].completed == true) {
-            taskClass = "completed";
-            completed++;
-        }
+    if (tasks.length === 0) {
 
-        html += '<li><span class="' + taskClass + '">' +
-                safeText(tasks[i].text) + "</span>" +
-                ' <button onclick="completeTask(' + i + ')">' +
-                completeLabel + "</button>" +
-                ' <button onclick="deleteTask(' + i + ')">' +
-                deleteLabel + "</button></li>";
+        let empty = document.createElement("li");
+
+        empty.textContent =
+            getLanguage() === "gr"
+            ? "Δεν υπάρχουν εργασίες ακόμα."
+            : "No tasks added yet.";
+
+        taskList.appendChild(empty);
+
+        return;
+
     }
 
-    document.getElementById("task-list").innerHTML = html;
-    document.getElementById("task-count").innerHTML = tasks.length;
-    document.getElementById("completed-count").innerHTML = completed;
+    tasks.forEach(function (task) {
+
+        let item = document.createElement("li");
+
+        let taskText = document.createElement("span");
+
+        taskText.textContent = task.name;
+
+        if (task.completed) {
+
+            taskText.classList.add("completed");
+
+        }
+
+        let completeButton = document.createElement("button");
+
+        completeButton.textContent =
+            task.completed
+            ? (getLanguage() === "gr" ? "Αναίρεση" : "Undo")
+            : (getLanguage() === "gr" ? "Ολοκλήρωση" : "Complete");
+
+        completeButton.onclick = function () {
+
+            completeTask(task.id);
+
+        };
+
+        let deleteButton = document.createElement("button");
+
+        deleteButton.textContent =
+            getLanguage() === "gr" ? "Διαγραφή" : "Delete";
+
+        deleteButton.onclick = function () {
+
+            deleteTask(task.id);
+
+        };
+
+        item.appendChild(taskText);
+        item.appendChild(completeButton);
+        item.appendChild(deleteButton);
+
+        taskList.appendChild(item);
+
+    });
+
 }
 
-function completeTask(index) {
-    if (tasks[index].completed == true) {
-        tasks[index].completed = false;
-    }
-    else {
-        tasks[index].completed = true;
-    }
+
+function completeTask(id) {
+
+    tasks.forEach(function (task) {
+
+        if (task.id === id) {
+
+            task.completed = !task.completed;
+
+        }
+
+    });
+
+    saveData();
 
     renderTasks();
+    updateDashboard();
+
 }
 
-function deleteTask(index) {
-    let newTasks = [];
 
-    for (let i = 0; i < tasks.length; i++) {
-        if (i != index) {
-            newTasks.push(tasks[i]);
-        }
+function deleteTask(id) {
+
+    tasks = tasks.filter(function (task) {
+
+        return task.id !== id;
+
+    });
+
+    saveData();
+
+    renderTasks();
+    updateDashboard();
+
+}
+
+
+
+
+function updateDashboard() {
+
+    let completedTasks = tasks.filter(function (task) {
+
+        return task.completed === true;
+
+    });
+
+    document.getElementById("task-count").textContent =
+        tasks.filter(function (task) {
+            return !task.completed;
+        }).length;
+
+    document.getElementById("study-count").textContent =
+        studies.length;
+
+    document.getElementById("completed-count").textContent =
+        completedTasks.length;
+
+    /* Show upcoming study sessions */
+
+    let dashboardList =
+        document.getElementById("dashboard-study-list");
+
+    dashboardList.innerHTML = "";
+
+    let now = new Date();
+
+    let upcomingStudies = studies.filter(function (study) {
+
+        let studyDate = new Date(study.date + "T" + study.time);
+
+        return studyDate >= now;
+
+    });
+
+    upcomingStudies.sort(function (a, b) {
+
+        return (a.date + a.time).localeCompare(b.date + b.time);
+
+    });
+
+    let nextStudies = upcomingStudies.slice(0, 3);
+
+    if (nextStudies.length === 0) {
+
+        let empty = document.createElement("li");
+
+        empty.textContent =
+            getLanguage() === "gr"
+            ? "Δεν υπάρχουν επόμενες συνεδρίες μελέτης."
+            : "No upcoming study sessions.";
+
+        dashboardList.appendChild(empty);
+
+        return;
+
     }
 
-    tasks = newTasks;
-    renderTasks();
+    nextStudies.forEach(function (study) {
+
+        let item = document.createElement("li");
+
+        let title = document.createElement("strong");
+        title.textContent = study.subject;
+
+        let date = document.createElement("p");
+        date.textContent = formatStudyDate(study.date, study.time);
+
+        item.appendChild(title);
+        item.appendChild(date);
+
+        dashboardList.appendChild(item);
+
+    });
+
 }
+
+
+
 
 function saveNotes() {
+
     savedNotes = document.getElementById("study-notes").value;
 
-    if (getLanguage() == "gr") {
-        document.getElementById("notes-message").innerHTML =
-            "Οι σημειώσεις κρατήθηκαν για αυτή τη συνεδρία!";
-    }
-    else {
-        document.getElementById("notes-message").innerHTML =
-            "Notes kept for this session!";
-    }
+    saveData();
+
+    document.getElementById("notes-message").textContent =
+        getLanguage() === "gr"
+        ? "Οι σημειώσεις αποθηκεύτηκαν!"
+        : "Your notes have been saved!";
+
 }
 
 
+function downloadNotes() {
 
-let timerInterval = null;
-let secondsLeft = 25 * 60;
-let totalSeconds = 25 * 60;
+    let notes = document.getElementById("study-notes").value;
+
+    if (notes.trim() === "") {
+
+        alert(
+            getLanguage() === "gr"
+            ? "Γράψε πρώτα κάποιες σημειώσεις."
+            : "Please write some notes first."
+        );
+
+        return;
+
+    }
+
+    saveNotes();
+
+   
+    let file = new Blob([notes], {
+        type: "text/plain;charset=utf-8"
+    });
+
+    let url = URL.createObjectURL(file);
+
+    let link = document.createElement("a");
+
+    link.href = url;
+    link.download = "StudyPlanner-Notes.txt";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    setTimeout(function () {
+
+        URL.revokeObjectURL(url);
+
+    }, 1000);
+
+}
+
+
 
 function updateTimerDisplay() {
 
     let minutes = Math.floor(secondsLeft / 60);
+
     let seconds = secondsLeft % 60;
 
-    if (minutes < 10) {
-        minutes = "0" + minutes;
-    }
+    let displayMinutes = String(minutes).padStart(2, "0");
 
-    if (seconds < 10) {
-        seconds = "0" + seconds;
-    }
+    let displaySeconds = String(seconds).padStart(2, "0");
 
-    document.getElementById("timer-display").innerHTML =
-        minutes + ":" + seconds;
+    document.getElementById("timer-display").textContent =
+        displayMinutes + ":" + displaySeconds;
 
-    let progress = (secondsLeft / totalSeconds) * 100;
+    /* Update circular timer progress */
+
+    let percentage = (secondsLeft / totalSeconds) * 100;
+
+    percentage = Math.max(0, Math.min(100, percentage));
 
     document.getElementById("timer-circle").style.background =
-        "conic-gradient(#6366f1 " + progress +
-        "%, #e5e7eb " + progress + "%)";
+        "conic-gradient(#7161e8 " +
+        percentage +
+        "%, #e8eaf2 " +
+        percentage +
+        "%)";
+
 }
+
 
 function startTimer() {
 
-    if (timerInterval != null) {
+    if (timerRunning) {
         return;
     }
 
-    if (secondsLeft == 0) {
+    if (secondsLeft <= 0) {
+
         resetTimer();
+
     }
 
-    timerInterval = setInterval(function() {
+    timerRunning = true;
 
-        secondsLeft = secondsLeft - 1;
+    timerInterval = setInterval(function () {
+
+        secondsLeft--;
+
         updateTimerDisplay();
 
         if (secondsLeft <= 0) {
+
             pauseTimer();
 
-            if (getLanguage() == "gr") {
-                window.alert("Ο χρόνος μελέτης τελείωσε!");
-            }
-            else {
-                window.alert("Study time is over!");
-            }
+            alert(
+                getLanguage() === "gr"
+                ? "Ο χρόνος μελέτης ολοκληρώθηκε! Κάνε ένα διάλειμμα."
+                : "Study session complete! Time for a break."
+            );
+
         }
 
     }, 1000);
+
 }
 
+
 function pauseTimer() {
+
     clearInterval(timerInterval);
+
     timerInterval = null;
+
+    timerRunning = false;
+
 }
+
 
 function resetTimer() {
 
     pauseTimer();
 
-    let minutes = Number(
-        document.getElementById("timer-minutes").value
-    );
+    let minutesInput = document.getElementById("timer-minutes");
 
-    if (!Number.isInteger(minutes) ||
-        minutes < 1 || minutes > 180) {
+    let minutes = Number(minutesInput.value);
 
-        if (getLanguage() == "gr") {
-            window.alert("Επίλεξε από 1 έως 180 λεπτά.");
-        }
-        else {
-            window.alert("Choose between 1 and 180 minutes.");
-        }
-
+    if (!Number.isFinite(minutes) || minutes < 1) {
         minutes = 25;
-        document.getElementById("timer-minutes").value = 25;
     }
 
-    totalSeconds = minutes * 60;
-    secondsLeft = totalSeconds;
+    if (minutes > 180) {
+        minutes = 180;
+    }
+minutes = parseInt(minutes);
 
-    updateTimerDisplay();
+document.getElementById("timer-minutes").value = minutes;
+
+totalSeconds = minutes * 60;
+secondsLeft = totalSeconds;
+
+updateTimerDisplay();
+
 }
 
 
+
+
 function sendContact(event) {
+
     event.preventDefault();
 
-    if (getLanguage() == "gr") {
-        window.alert("Το μήνυμα ελέγχθηκε! Δεν έχει συνδεθεί ακόμη υπηρεσία αποστολής.");
-    }
-    else {
-        window.alert("Message validated! No sending service is connected yet.");
+    let name = document.getElementById("contact-name").value.trim();
+
+    let email = document.getElementById("contact-email").value.trim();
+
+    let phone = document.getElementById("contact-phone").value.trim();
+
+    let message = document.getElementById("contact-message").value.trim();
+
+    if (
+        name === "" ||
+        email === "" ||
+        phone === "" ||
+        message === ""
+    ) {
+
+        alert(
+            getLanguage() === "gr"
+            ? "Παρακαλώ συμπλήρωσε όλα τα πεδία."
+            : "Please fill in all fields."
+        );
+
+        return;
+
     }
 
-    event.target.reset();
 
-    document.getElementById("character-count").innerHTML = "0 / 200";
-    document.getElementById("typing-message").innerHTML = "";
+
+    let result = document.getElementById("contact-result");
+
+    if (result === null) {
+
+        result = document.createElement("p");
+
+        result.id = "contact-result";
+
+        result.style.color = "#16846d";
+
+        document.querySelector("#contact-section form").appendChild(result);
+
+    }
+
+    result.textContent =
+        getLanguage() === "gr"
+        ? "Η φόρμα συμπληρώθηκε επιτυχώς. Αυτή είναι δοκιμαστική σελίδα και το μήνυμα δεν στάλθηκε."
+        : "Your form was completed successfully. This is a demo website, so no message was sent.";
+
+    document.querySelector("#contact-section form").reset();
+
+    document.getElementById("character-count").textContent = "0 / 200";
+
+    document.getElementById("typing-message").textContent = "";
+
 }
