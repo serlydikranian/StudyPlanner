@@ -1,0 +1,388 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyPlanner</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="script.js"></script>
+</head>
+
+<body>
+
+<div id="language-box">
+    <label for="language">Translate to Greek?</label>
+    <select id="language" onchange="changeLanguage()">
+        <option value="">Choose language</option>
+        <option value="en">English</option>
+        <option value="gr">Ελληνικά</option>
+    </select>
+</div>
+
+<section id="welcome-section">
+    <div class="signup-intro">
+        <div class="logo">✦ StudyPlanner</div>
+        <p class="eyebrow">YOUR UNIVERSITY WORKSPACE</p>
+        <h1 id="welcome">Your semester, organized.</h1>
+        <p id="description">
+            Plan smarter, track your progress and keep everything in one place.
+        </p>
+
+        <div class="intro-features">
+            <p>✓ Organize your study sessions</p>
+            <p>✓ Manage university assignments</p>
+            <p>✓ Stay focused and productive</p>
+        </div>
+    </div>
+
+    <div class="signup-card">
+        <h2 id="signup-title">Create Your Account</h2>
+        <p id="signup-description">Your university journey starts here.</p>
+
+        <form id="signup-form" onsubmit="signUp(event)">
+            <label id="name-label" for="first-name">First Name</label>
+            <input type="text" id="first-name" required>
+
+            <label id="surname-label" for="surname">Surname</label>
+            <input type="text" id="surname" required>
+
+            <label id="university-label" for="university">University</label>
+            <select id="university" required>
+                <option value="">Select your university</option>
+                <option value="European University Cyprus">European University Cyprus</option>
+                <option value="University of Cyprus">University of Cyprus</option>
+                <option value="University of Nicosia">University of Nicosia</option>
+                <option value="Frederick University">Frederick University</option>
+                <option value="Cyprus University of Technology">Cyprus University of Technology</option>
+                <option value="UCLan Cyprus">UCLan Cyprus</option>
+                <option value="Neapolis University Pafos">Neapolis University Pafos</option>
+                <option value="Open University of Cyprus">Open University of Cyprus</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label id="birthday-label" for="birthday">Date of Birth</label>
+            <input type="date" id="birthday" required>
+
+            <label id="email-label" for="email">Email</label>
+            <input type="email" id="email" required>
+
+            <button type="submit" id="signup-button" class="primary">
+                Enter My Workspace
+            </button>
+        </form>
+    </div>
+</section>
+
+<div id="student-page">
+
+    <aside id="sidebar">
+        <h2 id="brand-title">✦ StudyPlanner</h2>
+        <p class="sidebar-heading">WORKSPACE</p>
+
+        <nav id="menu">
+            <a href="#dashboard-section" id="nav-dashboard" class="nav-item active"
+               onclick="showSection('dashboard-section')">
+                ◫ <span id="dashboard-menu">Dashboard</span>
+            </a>
+
+            <a href="#planner-section" id="nav-planner" class="nav-item"
+               onclick="showSection('planner-section')">
+                ▦ <span id="planner-menu">My Planner</span>
+            </a>
+
+            <a href="#task-section" id="nav-task" class="nav-item"
+               onclick="showSection('task-section')">
+                ✓ <span id="task-menu">To-Do List</span>
+            </a>
+
+            <a href="#notes-section" id="nav-notes" class="nav-item"
+               onclick="showSection('notes-section')">
+                ▤ <span id="notes-menu">Study Notes</span>
+            </a>
+
+            <a href="#timer-section" id="nav-timer" class="nav-item"
+               onclick="showSection('timer-section')">
+                ◷ <span id="timer-menu">Study Timer</span>
+            </a>
+
+            <a href="#contact-section" id="nav-contact" class="nav-item"
+               onclick="showSection('contact-section')">
+                ✉ <span id="contact-menu">Contact Us</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-profile">
+            <div class="avatar">✦</div>
+            <div>
+                <strong id="profile-name">Student</strong>
+                <p id="profile-university">University</p>
+            </div>
+        </div>
+    </aside>
+
+    <main id="main-content">
+
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">UNIVERSITY STUDY WORKSPACE</p>
+                <h2 id="student-welcome">Welcome!</h2>
+            </div>
+            <div class="status">● Ready to focus</div>
+        </header>
+
+        <section id="dashboard-section" class="feature-section">
+
+            <div class="hero-card">
+                <div>
+                    <p class="eyebrow">YOUR STUDY HUB</p>
+                    <h1 id="hero-title">Make today count.</h1>
+                    <p id="hero-description">
+                        Small steps, big progress. Your semester starts here.
+                    </p>
+                    <button class="hero-button"
+                            onclick="showSection('planner-section')"
+                            id="hero-button">
+                        Plan a Study Session →
+                    </button>
+                </div>
+                <div class="hero-decoration">✦</div>
+            </div>
+
+            <h2 id="overview-title">My Dashboard</h2>
+
+            <div class="stats-grid">
+                <article class="stat-card purple">
+                    <p id="task-stat-title">To-Do Tasks</p>
+                    <h1 id="task-count">0</h1>
+                    <span>✓</span>
+                </article>
+
+                <article class="stat-card teal">
+                    <p id="study-stat-title">Study Sessions</p>
+                    <h1 id="study-count">0</h1>
+                    <span>▦</span>
+                </article>
+
+                <article class="stat-card peach">
+                    <p id="completed-stat-title">Completed Tasks</p>
+                    <h1 id="completed-count">0</h1>
+                    <span>✦</span>
+                </article>
+            </div>
+
+            <div class="content-card">
+                <h3 id="dashboard-upcoming-title">Upcoming Sessions</h3>
+                <ul id="dashboard-study-list"></ul>
+            </div>
+
+            <div class="content-card">
+                <h3 id="tips-title">Study Tips</h3>
+                <table>
+                    <tr>
+                        <th id="tip-heading">Tip</th>
+                        <th id="description-heading">Description</th>
+                    </tr>
+                    <tr>
+                        <td id="tip-one">Planning</td>
+                        <td id="tip-one-description">Organize your study time.</td>
+                    </tr>
+                    <tr>
+                        <td id="tip-two">Breaks</td>
+                        <td id="tip-two-description">Take regular short breaks.</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <section id="planner-section" class="feature-section">
+            <div class="page-heading">
+                <p class="eyebrow">STUDY SCHEDULE</p>
+                <h1 id="planner-title">My Planner</h1>
+                <p id="planner-description">Organize your study sessions.</p>
+            </div>
+
+            <div class="content-card">
+                <h3 id="new-study-title">New Study Session</h3>
+
+                <form onsubmit="addStudy(event)">
+                    <label id="subject-label" for="subject">Subject</label>
+                    <input type="text" id="subject" required>
+
+                    <label id="study-date-label" for="study-date">Date</label>
+                    <input type="date" id="study-date" required>
+
+                    <label id="study-time-label" for="study-time">Time</label>
+                    <input type="time" id="study-time" required>
+
+                    <button type="submit" class="primary" id="add-study-button">
+                        Add Study Session
+                    </button>
+                </form>
+            </div>
+
+            <div class="content-card">
+                <h3 id="upcoming-title">Upcoming Sessions</h3>
+                <ul id="study-list"></ul>
+            </div>
+        </section>
+
+        <section id="task-section" class="feature-section">
+            <div class="page-heading">
+                <p class="eyebrow">GET THINGS DONE</p>
+                <h1 id="tasks-title">To-Do List</h1>
+                <p id="tasks-description">Stay on top of your assignments.</p>
+            </div>
+
+            <div class="content-card">
+                <h3 id="new-task-title">Add a Task</h3>
+
+                <form onsubmit="addTask(event)">
+                    <label id="task-label" for="new-task">New Task</label>
+                    <input type="text" id="new-task" required
+                           placeholder="Enter a task">
+
+                    <button type="submit" class="primary" id="add-task-button">
+                        Add Task
+                    </button>
+                </form>
+            </div>
+
+            <div class="content-card">
+                <h3 id="my-tasks-title">My Tasks</h3>
+                <ul id="task-list"></ul>
+            </div>
+        </section>
+
+        <section id="notes-section" class="feature-section">
+            <div class="page-heading">
+                <p class="eyebrow">CAPTURE YOUR IDEAS</p>
+                <h1 id="notes-title">Study Notes</h1>
+                <p id="notes-description">Write and organize your notes.</p>
+            </div>
+
+            <div class="content-card">
+                <h3 id="notebook-title">My Notebook</h3>
+
+                <textarea id="study-notes" rows="12"
+                          placeholder="Write your notes here..."></textarea>
+
+                <button class="primary" onclick="saveNotes()"
+                        id="save-notes-button">Save Notes</button>
+
+                <p id="notes-message"></p>
+            </div>
+        </section>
+
+        <section id="timer-section" class="feature-section">
+
+    <h2 data-en="Study Timer"
+        data-gr="Χρονόμετρο Μελέτης">
+        Study Timer
+    </h2>
+
+    <p data-en="Stay focused on your study goals."
+       data-gr="Συγκεντρώσου στους στόχους μελέτης σου.">
+        Stay focused on your study goals.
+    </p>
+
+    <div id="timer-card" class="content-card">
+
+        <h3 data-en="Focus Session"
+            data-gr="Συνεδρία Συγκέντρωσης">
+            Focus Session
+        </h3>
+
+        <div id="timer-circle">
+            <div id="timer-inner">
+
+                <h1 id="timer-display">25:00</h1>
+
+                <p data-en="Time remaining" data-gr="Χρόνος που απομένει">
+                    Time remaining
+                </p>
+
+            </div>
+        </div>
+
+        <label id="timer-minutes-label" for="timer-minutes" data-en="Study Minutes" data-gr="Λεπτά Μελέτης">
+            Study Minutes
+        </label>
+
+        <input type="number" id="timer-minutes"
+               min="1"
+               max="180"
+               value="25"
+               onchange="resetTimer()">
+
+        <div id="timer-buttons">
+            <button id="start-button" onclick="startTimer()"  data-en="Start"  data-gr="Έναρξη">
+                Start
+            </button>
+
+            <button onclick="pauseTimer()"
+                    data-en="Pause"
+                    data-gr="Παύση">
+                Pause
+            </button>
+
+            <button onclick="resetTimer()"
+                    data-en="Reset"
+                    data-gr="Επαναφορά">
+                Reset
+            </button>
+
+        </div>
+
+    </div>
+</section>
+
+        <section id="contact-section" class="feature-section">
+            <div class="page-heading">
+                <p class="eyebrow">GET IN TOUCH</p>
+                <h1 id="contact-title">Contact Us</h1>
+                <p id="contact-description">
+                    Have a question or suggestion? Contact us.
+                </p>
+            </div>
+
+            <div class="content-card">
+                <form onsubmit="sendContact(event)">
+                    <label id="contact-name-label" for="contact-name">Name</label>
+                    <input type="text" id="contact-name" required>
+
+                    <label id="contact-email-label" for="contact-email">Email</label>
+                    <input type="email" id="contact-email" required>
+
+                    <label id="contact-phone-label" for="contact-phone">
+                        Telephone Number
+                    </label>
+                    <input type="tel" id="contact-phone"
+                           pattern="[0-9]{8}" maxlength="8"
+                           title="Enter an 8-digit phone number" required>
+
+                    <label id="contact-message-label" for="contact-message">
+                        Message
+                    </label>
+                    <textarea id="contact-message" rows="7"
+                              maxlength="200" required></textarea>
+
+                    <p id="character-count">0 / 200</p>
+                    <p id="typing-message"></p>
+
+                    <button type="submit" class="primary"
+                            id="send-button">Send Message</button>
+                </form>
+            </div>
+        </section>
+
+        <footer>
+            StudyPlanner | University Study Workspace
+        </footer>
+    </main>
+</div>
+
+</body>
+</html>
+
